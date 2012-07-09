@@ -256,7 +256,9 @@ static ZXRESTKit *kit;
     return result;
 }
 
--(void)addObserverTo:(id)observer selector:(SEL)selector name:(NSString *)name object:(id)object type:(RequestStatus)type
+
+
+-(NSString *)notificationWithName:(NSString *)name andType:(RequestStatus)type;
 {
     NSString *notificationName = [NSString string];
     switch (type) {
@@ -284,44 +286,43 @@ static ZXRESTKit *kit;
         default:
             break;
     }
-    
-    
+    return notificationName;
+}
+-(void)addObserverTo:(id)observer selector:(SEL)selector name:(NSString *)name object:(id)object type:(RequestStatus)type
+{
+    NSString *notificationName = [self notificationWithName:name andType:type];
+
     [[NSNotificationCenter defaultCenter] addObserver:observer selector:selector name:notificationName object:object];
 }
 -(void)removeObserverTo:(id)observer name:(NSString *)name object:(id)object type:(RequestStatus)type
 {
-    NSString *notificationName = [NSString string];
-    switch (type) {
-        case kNoNotification:
-            notificationName = [name stringByAppendingString:@""];
-            break;
-        case kRequestStarted:
-            notificationName = [name stringByAppendingString:@"Started"];
-            break;
-        case kRequestResponse:
-            notificationName = [name stringByAppendingString:@"Response"];
-            break;
-        case  kRequestRedirect:
-            notificationName = [name stringByAppendingString:@"Redirect"];
-            break;
-        case kRequestRedirected:
-            notificationName = [name stringByAppendingString:@"Redirected"];
-            break;
-        case kRequestFailed:
-            notificationName = [name stringByAppendingString:@"Failed"];
-            break;
-        case kRequestFinished:
-            notificationName = [name stringByAppendingString:@"Finished"];
-            break;
-        default:
-            break;
-    }
-    
+    NSString *notificationName = [self notificationWithName:name andType:type];
     
     [[NSNotificationCenter defaultCenter]removeObserver:observer name:notificationName object:object];
 }
+-(NSString *) md5: (NSString *) inPutText {
+    const char *cStr = [inPutText UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(cStr, strlen(cStr), result);
+    
+    return [[NSString stringWithFormat: @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+             result[0], result[1], result[2], result[3],
+             result[4], result[5], result[6], result[7],
+             result[8], result[9], result[10], result[11],
+             result[12], result[13], result[14], result[15]
+             ] lowercaseString];
+}
+
+
+
+
+
+
 
 @end
+
+
+
 
 
 

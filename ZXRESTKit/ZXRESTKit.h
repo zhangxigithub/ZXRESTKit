@@ -10,7 +10,7 @@
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 #import "CJSONDeserializer.h"
-
+#import <CommonCrypto/CommonDigest.h>
 
 typedef enum{
     
@@ -86,8 +86,10 @@ typedef enum{
 
 
 //Tools
-
+-(NSString *) md5: (NSString *) inPutText;
 -(NSString *)NSStirngFromNSDictionary:(NSDictionary *)dic;
+
+-(NSString *)notificationWithName:(NSString *)name andType:(RequestStatus)type;
 -(void)addObserverTo:(id)observer selector:(SEL)selector name:(NSString *)name object:(id)object type:(RequestStatus)type;
 -(void)removeObserverTo:(id)observer name:(NSString *)name object:(id)object type:(RequestStatus)type;
 
