@@ -54,8 +54,8 @@ static ZXRESTKit *kit;
 -(void)get:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification
 {
     //根据baseURL拼接请求字符串
-    NSString *urlStr = [baseURL stringByAppendingFormat:@"%@",operation];
-   
+    NSString *urlStr = [baseURL stringByAppendingString:operation];
+    
     [self getWithURL:urlStr withParams:params forNotification:notification];
 }
 
@@ -76,12 +76,13 @@ static ZXRESTKit *kit;
     [self postWithURL:operation withParams:params forNotification:Nil];
 }
 -(void)getWithURL:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification
+
 {
     NSString *paramStr = [self NSStirngFromNSDictionary:params];
     NSString *urlStr = [operation stringByAppendingFormat:@"/?%@",paramStr];
     NSURL *url = [NSURL URLWithString:urlStr];
     
-    NSLog(@"url:%@",[url absoluteString]);
+    //NSLog(@"url:%@",[url absoluteString]);
     
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:url];
     request.delegate = self;
@@ -90,10 +91,11 @@ static ZXRESTKit *kit;
     request.notificationName = notification;
     [request startAsynchronous];
 }
+
 -(void)postWithURL:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification
 {
     NSURL *url = [NSURL URLWithString:operation];
-    NSLog(@"url:%@",[url absoluteString]);
+    //NSLog(@"url:%@",[url absoluteString]);
     ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:url];
     request.delegate = self;
     request.requestMethod = @"POST";
@@ -159,7 +161,7 @@ static ZXRESTKit *kit;
 }
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-
+    
     NSError *error = Nil;
     if(request.responseData == Nil)
     {
@@ -180,10 +182,10 @@ static ZXRESTKit *kit;
     @catch (NSException *exception) {
         NSLog(@"NSException : %@",[exception description]);
     }
-
-
+    
+    
     request.result  = result;
-
+    
     
     
     
@@ -237,7 +239,7 @@ static ZXRESTKit *kit;
 -(NSString *)NSStirngFromNSDictionary:(NSDictionary *)dic
 {
     ASIFormDataRequest *formDataRequest = [ASIFormDataRequest requestWithURL:nil]; 
-
+    
     NSString *result = [[NSString alloc] init];
     
     for(NSString *key in [dic allKeys])
@@ -254,5 +256,46 @@ static ZXRESTKit *kit;
     return result;
 }
 
+-(void)addObserverTo:(id)observer selector:(SEL)selector name:(NSString *)name object:(id)object type:(RequestStatus)type
+{
+    NSString *notificationName = [NSString string];
+    switch (type) {
+        case kNoNotification:
+            notificationName = [name stringByAppendingString:@""];
+            break;
+        case kRequestStarted:
+            notificationName = [name stringByAppendingString:@"Started"];
+            break;
+        case kRequestResponse:
+            notificationName = [name stringByAppendingString:@"Response"];
+            break;
+        case  kRequestRedirect:
+            notificationName = [name stringByAppendingString:@"Redirect"];
+            break;
+        case kRequestRedirected:
+            notificationName = [name stringByAppendingString:@"Redirected"];
+            break;
+        case kRequestFailed:
+            notificationName = [name stringByAppendingString:@"Failed"];
+            break;
+        case kRequestFinished:
+            notificationName = [name stringByAppendingString:@"Finished"];
+            break;
+        default:
+            break;
+    }
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:observer selector:selector name:notificationName object:object];
+}
+
 
 @end
+
+
+
+
+
+
+
+

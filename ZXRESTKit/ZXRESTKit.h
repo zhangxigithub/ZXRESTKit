@@ -12,6 +12,22 @@
 #import "CJSONDeserializer.h"
 
 
+typedef enum{
+    
+    kRequestStarted,        
+    kRequestResponse,
+    kRequestRedirect,
+    kRequestFinished,
+    kRequestFailed,
+    kRequestRedirected,
+    kNoNotification
+    
+    
+}RequestStatus;
+
+
+
+
 
 
 @protocol ZXRESTKitDelegate
@@ -72,7 +88,7 @@
 //Tools
 
 -(NSString *)NSStirngFromNSDictionary:(NSDictionary *)dic;
-
+-(void)addObserverTo:(id)observer selector:(SEL)selector name:(NSString *)name object:(id)object type:(RequestStatus)type;
 
 @end
 

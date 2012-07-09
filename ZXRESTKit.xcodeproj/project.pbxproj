@@ -135,11 +135,6 @@
 		4311E73415A6880000C5DD00 = {
 			isa = PBXGroup;
 			children = (
-				4311E78D15A68B7200C5DD00 /* libz.dylib */,
-				4311E78B15A68B5500C5DD00 /* CoreGraphics.framework */,
-				4311E78915A68B4D00C5DD00 /* MobileCoreServices.framework */,
-				4311E78715A68B4500C5DD00 /* SystemConfiguration.framework */,
-				4311E78515A68B3D00C5DD00 /* CFNetwork.framework */,
 				4311E74815A6880000C5DD00 /* ZXRESTKit */,
 				4311E74515A6880000C5DD00 /* Frameworks */,
 				4311E74415A6880000C5DD00 /* Products */,
@@ -157,6 +152,11 @@
 		4311E74515A6880000C5DD00 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4311E78D15A68B7200C5DD00 /* libz.dylib */,
+				4311E78B15A68B5500C5DD00 /* CoreGraphics.framework */,
+				4311E78915A68B4D00C5DD00 /* MobileCoreServices.framework */,
+				4311E78715A68B4500C5DD00 /* SystemConfiguration.framework */,
+				4311E78515A68B3D00C5DD00 /* CFNetwork.framework */,
 				4311E74615A6880000C5DD00 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -518,6 +518,7 @@
 				4311E75315A6880000C5DD00 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
