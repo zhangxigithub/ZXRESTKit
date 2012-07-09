@@ -288,7 +288,38 @@ static ZXRESTKit *kit;
     
     [[NSNotificationCenter defaultCenter] addObserver:observer selector:selector name:notificationName object:object];
 }
-
+-(void)removeObserverTo:(id)observer name:(NSString *)name object:(id)object type:(RequestStatus)type
+{
+    NSString *notificationName = [NSString string];
+    switch (type) {
+        case kNoNotification:
+            notificationName = [name stringByAppendingString:@""];
+            break;
+        case kRequestStarted:
+            notificationName = [name stringByAppendingString:@"Started"];
+            break;
+        case kRequestResponse:
+            notificationName = [name stringByAppendingString:@"Response"];
+            break;
+        case  kRequestRedirect:
+            notificationName = [name stringByAppendingString:@"Redirect"];
+            break;
+        case kRequestRedirected:
+            notificationName = [name stringByAppendingString:@"Redirected"];
+            break;
+        case kRequestFailed:
+            notificationName = [name stringByAppendingString:@"Failed"];
+            break;
+        case kRequestFinished:
+            notificationName = [name stringByAppendingString:@"Finished"];
+            break;
+        default:
+            break;
+    }
+    
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:observer name:notificationName object:object];
+}
 
 @end
 

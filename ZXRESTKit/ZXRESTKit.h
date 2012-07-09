@@ -89,6 +89,7 @@ typedef enum{
 
 -(NSString *)NSStirngFromNSDictionary:(NSDictionary *)dic;
 -(void)addObserverTo:(id)observer selector:(SEL)selector name:(NSString *)name object:(id)object type:(RequestStatus)type;
+-(void)removeObserverTo:(id)observer name:(NSString *)name object:(id)object type:(RequestStatus)type;
 
 @end
 
