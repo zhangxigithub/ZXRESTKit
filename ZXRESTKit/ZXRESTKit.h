@@ -89,9 +89,18 @@ typedef enum{
 -(NSString *) md5: (NSString *) inPutText;
 -(NSString *)NSStirngFromNSDictionary:(NSDictionary *)dic;
 
--(NSString *)notificationWithName:(NSString *)name andType:(RequestStatus)type;
--(void)addObserverTo:(id)observer selector:(SEL)selector name:(NSString *)name object:(id)object type:(RequestStatus)type;
--(void)removeObserverTo:(id)observer name:(NSString *)name object:(id)object type:(RequestStatus)type;
+-(NSString *)notificationWithName:(NSString *)name 
+                          andType:(RequestStatus)type;
+-(void)addObserverTo:(id)observer 
+            selector:(SEL)selector 
+                name:(NSString *)name
+              object:(id)object 
+                type:(RequestStatus)type;
+
+-(void)removeObserverTo:(id)observer
+                   name:(NSString *)name 
+                 object:(id)object
+                   type:(RequestStatus)type;
 
 @end
 
