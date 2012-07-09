@@ -58,7 +58,12 @@
 
 
 
+//不通过baseURL 直接请求完整的地址，方便临时性拼接URL请求
 
+-(void)getWithURL:(NSString *)operation withParams:(NSDictionary *)params;
+-(void)postWithURL:(NSString *)operation withParams:(NSDictionary *)params;
+-(void)getWithURL:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification;
+-(void)postWithURL:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification;
 
 
 +(ZXRESTKit *)sharedKit;

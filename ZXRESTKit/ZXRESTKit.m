@@ -36,7 +36,10 @@ static ZXRESTKit *kit;
     
     return self;
 }
-#pragma -mark Method
+
+
+
+#pragma -mark 使用baseURL的请求
 
 -(void)get:(NSString *)operation withParams:(NSDictionary *)params
 {
@@ -48,14 +51,38 @@ static ZXRESTKit *kit;
 }
 
 
-
-
 -(void)get:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification
 {
+    //根据baseURL拼接请求字符串
+    NSString *urlStr = [baseURL stringByAppendingFormat:@"%@",operation];
+   
+    [self getWithURL:urlStr withParams:params forNotification:notification];
+}
+
+-(void)post:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification
+{
+    NSString *urlStr = [baseURL stringByAppendingString:operation];
+    [self postWithURL:urlStr withParams:params forNotification:notification];
+}
+
+#pragma -mark 不使用baseURL的请求
+
+-(void)getWithURL:(NSString *)operation withParams:(NSDictionary *)params
+{
+    [self getWithURL:operation withParams:params forNotification:Nil];
+}
+-(void)postWithURL:(NSString *)operation withParams:(NSDictionary *)params
+{
+    [self postWithURL:operation withParams:params forNotification:Nil];
+}
+-(void)getWithURL:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification
+{
     NSString *paramStr = [self NSStirngFromNSDictionary:params];
+    NSString *urlStr = [operation stringByAppendingFormat:@"/?%@",paramStr];
+    NSURL *url = [NSURL URLWithString:urlStr];
     
-    NSURL *url = [NSURL URLWithString:[baseURL stringByAppendingFormat:@"%@/?%@",operation,paramStr]];
     NSLog(@"url:%@",[url absoluteString]);
+    
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:url];
     request.delegate = self;
     request.requestMethod = @"GET";
@@ -63,10 +90,9 @@ static ZXRESTKit *kit;
     request.notificationName = notification;
     [request startAsynchronous];
 }
-
--(void)post:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification
+-(void)postWithURL:(NSString *)operation withParams:(NSDictionary *)params forNotification:(NSString *)notification
 {
-    NSURL *url = [NSURL URLWithString:[baseURL stringByAppendingString:operation]];
+    NSURL *url = [NSURL URLWithString:operation];
     NSLog(@"url:%@",[url absoluteString]);
     ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:url];
     request.delegate = self;
@@ -80,6 +106,13 @@ static ZXRESTKit *kit;
     
     [request startAsynchronous];
 }
+
+
+
+
+
+
+
 
 
 #pragma -mark ASIHTTPRequest Delegate
@@ -133,13 +166,22 @@ static ZXRESTKit *kit;
         NSLog(@"NIL");
     }
     
-    NSDictionary *result = [deserializer deserializeAsDictionary:request.responseData error:&error];
-    if(error != Nil)
-    {
-        NSLog(@"%@",[error description]);
-        //return ;
-    }
+    NSDictionary *result;
     
+    @try {
+        result = [deserializer deserializeAsDictionary:request.responseData error:&error];
+        if(error != Nil)
+        {
+            NSLog(@"error:%@",error);
+            //return ;
+        }
+        
+    }
+    @catch (NSException *exception) {
+        NSLog(@"NSException : %@",[exception description]);
+    }
+
+
     request.result  = result;
 
     
@@ -194,17 +236,20 @@ static ZXRESTKit *kit;
 #pragma -mark Tools
 -(NSString *)NSStirngFromNSDictionary:(NSDictionary *)dic
 {
+    ASIFormDataRequest *formDataRequest = [ASIFormDataRequest requestWithURL:nil]; 
+
     NSString *result = [[NSString alloc] init];
     
     for(NSString *key in [dic allKeys])
     {
-        result = [result stringByAppendingFormat:@"%@=%@&",key,[dic objectForKey:key]];
+        NSString *encodedValue = [formDataRequest encodeURL:[dic objectForKey:key]]; 
+        result = [result stringByAppendingFormat:@"%@=%@&",key,encodedValue];
     }
     if(result.length > 0)
     {
         result = [result substringWithRange:NSMakeRange(0, result.length-1)];
     }
-    result = [result stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    //result = [result stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     return result;
 }
