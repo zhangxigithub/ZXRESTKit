@@ -79,10 +79,16 @@ static ZXRESTKit *kit;
 
 {
     NSString *paramStr = [self NSStirngFromNSDictionary:params];
-    NSString *urlStr = [operation stringByAppendingFormat:@"/?%@",paramStr];
+    NSString *urlStr;
+    
+    if(paramStr != nil)
+        urlStr = [operation stringByAppendingFormat:@"?%@",paramStr];
+    else
+        urlStr = operation; 
+    
     NSURL *url = [NSURL URLWithString:urlStr];
     
-    //NSLog(@"url:%@",[url absoluteString]);
+    NSLog(@"url:%@",[url absoluteString]);
     
     ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:url];
     request.delegate = self;
@@ -238,6 +244,8 @@ static ZXRESTKit *kit;
 #pragma -mark Tools
 -(NSString *)NSStirngFromNSDictionary:(NSDictionary *)dic
 {
+    if(dic == nil || dic.count == 0) return nil;
+    
     ASIFormDataRequest *formDataRequest = [ASIFormDataRequest requestWithURL:nil]; 
     
     NSString *result = [[NSString alloc] init];
